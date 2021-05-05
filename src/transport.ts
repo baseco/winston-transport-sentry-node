@@ -52,7 +52,7 @@ export default class SentryTransport extends TransportStream {
 
     if (this.silent) return callback();
 
-    const { message, level, tags, user, ...meta } = info;
+    const { message, level, tags, user, context, ...meta } = info;
     console.log("what info", info);
     const winstonLevel = info[LEVEL];
 
@@ -63,7 +63,9 @@ export default class SentryTransport extends TransportStream {
         scope.setTags(tags);
       }
 
-      scope.setContext("context", meta);
+      scope.setContext("context", context);
+
+      scope.setExtras(meta);
 
       if (user !== undefined && SentryTransport.isObject(user)) {
         scope.setUser(user);
